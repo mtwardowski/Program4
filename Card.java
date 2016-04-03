@@ -25,35 +25,38 @@
 * 
 * @Author Michael Twardowski
 */
+
 import java.awt.Color;						
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.geom.RoundRectangle2D;
 import java.util.Scanner;
 
 import shapes.AShape;
 
-public class Card
+public class Card extends AShape
 {
 	/**
 	 * Dimensions for the <code>Card</code> graphic
 	 */
     private static final int HEIGHT = 200,
     				  		 WIDTH = 125,
-    				  		 CORNER_ARCH = 10;
-	
-	/**
-	 * Holds values for the location of the <code>Card</code> and the
-	 * value for of each side of its front face.
-	 */
-	private int x,
-		        y,
-		        value;
+    				  		 CORNER_ARCH = 10,
+    				  		 CARD_FACE_WIDTH = 25,
+    				  		 CARD_FACE_HEIGHT = 25;
 	
 	/**
 	 * Holds the cards suit
 	 */
 	private AShape cardFace;
+	
+	 /**
+     * Dimensions location and drawing of the card's face
+     */
+	
+	private final int CARD_FACE_X,
+					  CARD_FACE_Y;
 	
 	/**
 	 *	The constructor for a <code>Card</code> receives a <code>int</code> 
@@ -70,8 +73,11 @@ public class Card
 	{
 		this.x = x;
 		this.y = y;
-		this.value = value;
+		number = value;
 		this.cardFace = cardFace;
+		CARD_FACE_X = x + WIDTH/2 - CARD_FACE_WIDTH/2;
+		CARD_FACE_Y = y + HEIGHT/2;
+		cardFace.setup(CARD_FACE_X, CARD_FACE_Y, CARD_FACE_WIDTH, CARD_FACE_HEIGHT);
 		
 	} // end constructor
 	
@@ -82,7 +88,8 @@ public class Card
 	 *
 	 * @param pane is a <code>Graphics</code> object
 	 */
-    public void drawCard(Graphics pane)
+	@Override
+    public void paint(Graphics pane)
     {
     	// Draw card outline
     	pane.setColor(Color.black);
@@ -90,28 +97,11 @@ public class Card
         RoundRectangle2D roundedRectangle = new RoundRectangle2D.Float(x, y, WIDTH, HEIGHT, CORNER_ARCH, CORNER_ARCH);
         pane2D.draw(roundedRectangle);
     	
-    	//.drawRect(x, y, WIDTH, HEIGHT);
-    	
-    	/*
-    	// Draws front face of Card
-    	pane.setColor(Color.white);
-    	pane.fillRect(x, y, WIDTH, HEIGHT);
-    	
-    	// Draws top and left side of Card
-    	pane.setColor(Color.gray);
-    	pane.fillPolygon(topX, topY, faceTotalPoints);
-    	pane.fillPolygon(sideX, sideY, faceTotalPoints);
-    	
-    	// Draws outlines for all edges
-    	pane.setColor(Color.black);
-    	pane.drawRect(x, y, WIDTH, HEIGHT);
-    	pane.drawPolygon(topX, topY, faceTotalPoints);
-    	pane.drawPolygon(sideX, sideY, faceTotalPoints);
-    	
-    	// Draws midline of Card
-    	pane.drawLine(x + WIDTH/2, y, x + WIDTH/2, y + HEIGHT);
-    	pane.drawLine(x + WIDTH/2, y, x + WIDTH/2 - DEPTH, y - DEPTH);
-    	*/
+        drawShape(pane);
+     // only draws the number if its value is valid
+     	if((number > 0)&&(number < 15)){
+     		drawCardValue(pane);
+     	}
     }
     
 	/**   
@@ -125,8 +115,50 @@ public class Card
 	 * @param centerX is an <code>int</code> corresponding to X coordinate of the dot.
 	 * @param centerY is an <code>int</code> corresponding to Y coordinate of the dot.
      */ 
-    private void drawShape(Graphics pane, int centerX, int centerY)
+    private void drawShape(Graphics pane)
 	{
+    	cardFace.paint(pane);
+	}
+    
+    /**   
+	 * The <code>drawDot</code> method receives a <code>Graphics</code> object, 
+	 * an <code>int</code> for the X coordinate, and an <code>int</code> for the
+	 * Y coordinate.
+	 * <p>
+	 * It draws a dot, centered at the X, Y coordinates.
+	 * <p>
+	 * @param pane is a <code>Graphics</code> object
+	 * @param centerX is an <code>int</code> corresponding to X coordinate of the dot.
+	 * @param centerY is an <code>int</code> corresponding to Y coordinate of the dot.
+     */ 
+    private void drawCardValue(Graphics pane)
+	{
+    	String cardValue = "";
+    	int labelWidth = pane.getFontMetrics().stringWidth("" + number);//width of number
+		int labelHeight = pane.getFontMetrics().getAscent();
+		if (number > 10){
+			switch(number){
+				case 11:
+					cardValue = "J";
+					break;
+				case 12:
+					cardValue = "Q";
+					break;
+				case 13:
+					cardValue = "K";
+					break;
+				case 14:
+					cardValue = "A";
+					break;
+				default:
+					cardValue = "";
+			}
+		}else{
+			cardValue = "" + number;
+		}
+		pane.drawString(cardValue,			//draws number the number in the
+					x + labelWidth*2,  // top left corner
+					y + labelHeight*2);
 	}
     
     /**

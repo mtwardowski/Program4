@@ -1,16 +1,20 @@
+/**
+ *  The <code>Heart</code> class is used to draw the heart suite on a card.
+ */
 package shapes;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
 
 public class Heart extends AShape{
 	
 	/**
-	 * Assigns the label.
+	 * Default Constructor
 	 */
 	public Heart(){
 		super();
-	}
+	}//end default constructor
 	
 	/**
 	 * Sets all of the properties
@@ -21,6 +25,7 @@ public class Heart extends AShape{
 	 */
 	public Heart(int x, int y ,int width, int height){
 		super(x, y, width, height);
+		color = Color.red;
 	}
 	
 	/**
@@ -33,10 +38,10 @@ public class Heart extends AShape{
 	@Override
 	public void setup(int x, int y, int width, int height){
 		super.setup(x, y, width, height);
+		color = Color.red;
 	}
 	/**
-	 * draws an oval, filled with the given color and its numeric label
-	 * @param pane
+	 * paints a heart
 	 */
 	@Override
 	public void paint(Graphics pane) {

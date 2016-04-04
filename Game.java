@@ -4,77 +4,62 @@
 *						=============================
 *	The <code>Game</code> Class extends the <code>Frame</code> Class.
 *	<p>
-*	The <code>paint</code> method will paint game pieces on <code>Game</code>
+*	The <code>paint</code> method will paint each <code>Card</code> on <code>Game</code>
 *	after then have been initialized.
-*	The <code>playersTurn</code> method creates a new <code>Card</code>
-* 	and places it on the <code>Game</code> based on the users input 
-*	for its value and location.
-*	The <code>computersTurn</code> method creates a new <code>Card</code>
-* 	with randomly generated value and location and places it on the
-* 	<code>Game</code> on the game board.
-* 	The <code>setDominoValue/code> method prompts a user to enter an 
-* 	<code>int</code> between 1 and 5 for the face value of the <code>Card</code>.
-* 	The <code>setCoordinate</code> method prompts a user for a coordinate for
-* 	a (<code>Card</code>) and places it on the <code>Game</code> based on 
-* 	that input.
-* 	The <code>getIntegerValue</code> method prompts a user to enter an
-*	<code>int</code> and returns a result (<code>int</code>).
+*	The <code>playTurn</code> method draws a <code>Card</code> from each
+*	players deck and plays it. The player with a higher value card scores
+*	a point.
+*	The <code>compareCardValues</code> method compares the value of each
+*	<code>Card</code> that is drawn and updates the game score based on the
+*	winner
+*	If the mouse click is in the Play Button, a turn will be played.  If it's 
+*	within the reset button, the game resets to the beginning. If it's within
+*	the quit button, the game window will close.
 *
 *	@Author Michael Twardowski
 */
-import java.util.Scanner;
 
 import button.AButton;
 import button.RegularButton;
 import shapes.AShape;
+import shapes.CardBack;
 import shapes.Diamond;
 import shapes.Heart;
-import shapes.Rect;
 import shapes.Spade;
 import shapes.Club;
 
 import java.awt.Frame;
-import java.awt.Insets;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Game extends Frame implements MouseListener, ComponentListener {
+public class Game extends Frame implements MouseListener {
 	/**
 	 * Buttons to respond to mouse clicks
 	 */
 	private AButton[] buttons = new AButton[3];
 	
 	/**
-	 * Cards to play with
+	 * 4 Piles of Cards to play with
 	 */
 	private Card[] cards = new Card[4];
 	
 	/**
-	 * Card locations
+	 * Card locations on the game space
 	 */
-	private int[] cardX = {200, 350 , 500, 650};
-	private int cardY = 200;
-	
+	private int[] cardX = {100, 575, 263, 413};
+	private int cardY = 275;
+
 	/**
-	 * Game score
+	 * Bar graph to visual current game score
 	 */
-	private int gameScore = 0,
-				roundScore = 1;
 	private BarGraph bar;
 	
 	/**
-	 * To keep track of the size of the window
+	 * To window size of the size of the window
 	 */
 	private int windowHeight, windowWidth;
-
-	/**
-	 * To make sure we don't draw the shapes too high or overlapping the buttons
-	 */
-	private static final int LABEL_HEIGHT = 50, BUTTON_PANEL = 115, PANEL_HEIGHT = 250;
 	
 	/**
 	 * Handle for the <code>Game</code> window.
@@ -86,38 +71,27 @@ public class Game extends Frame implements MouseListener, ComponentListener {
 	 */
 	private boolean initializationComplete = false;
 	private boolean[] areCardsVisible = {false, false, false, false};
-	
-	
-	//TODO: do I need this?
-	/**
-	 * Height, and Width for the <code>Game</code> window.
-	 * The MAX_VALUE_X and MAX_VALUE_Y is playable area after the 
-	 * <code>Game</code> window border and <code>Card</code> width is 
-	 * accounted for.
-	 */
-	private final int WIDTH = 800, 
-					  HEIGHT = 800,
-					  MAX_VALUE_X,
-					  MAX_VALUE_Y;
-	
-	/**
-	 * Holds the insets for the <code>Game</code> window
-	 */
-	private Insets insets;
 
 	/**
-	 * Instantiates a <code>Game</code> on which to place <code>Dominos</code>.
+	 * Instantiates a <code>Game</code> on which to play
 	 */
 	public static void main(String[] args) 
 	{
-		Game myGameTable;
-		myGameTable = new Game();
+		Game myGameTable = new Game();
 		
-		/* useful for testing
-		*for(int i=0; i<50; i++){
-		*	myGameTable.computersTurn();
-		*}
+		/*
+		//useful for testing
+		for(int i=0; i<50; i++){
+			// delays playing turn
+			myGameTable.playTurn();
+			try {
+			    Thread.sleep(1000);  //1000 milliseconds is one second.
+			} catch(InterruptedException ex) {
+			    //Thread.currentThread().interrupt();
+			}
+		}
 		*/
+	
 	}
 
 	/**
@@ -125,92 +99,75 @@ public class Game extends Frame implements MouseListener, ComponentListener {
 	 */
 	public Game() 
 	{
-		final int 	BUTTON_WIDTH = 100,
-					BUTTON_HEIGHT = 40,//to define the size of our buttons
-					SPACE = 10;//space between buttons
+		final int 	BUTTON_WIDTH = 100, // defines size of buttons
+					BUTTON_HEIGHT = 40,
+					BUTTON_X = 240,  // locate of first button
+					BUTTON_Y = 600,
+					SPACE = 10,  // space between buttons
+					BAR_X = 400, // location of BarGraph
+					BAR_Y = 500;
 
-		setTitle("War");//name, location and size of our frame
+		setTitle("War");		//name, location and size of our frame
 		setLocation(150,150);	
 
-		windowWidth = 800;//can be resized, but starts out reasonably large
+		windowWidth = 800;	//can be resized, but starts out reasonably large
 		windowHeight = 800;
 		setSize(windowWidth,windowHeight);
 
 		/*
-		 * Set up our three buttons in the top left of the drawing window
+		 * Sets up three buttons to control the game
 		 */
-		buttons[0] = new RegularButton("Play", Color.red, SPACE, LABEL_HEIGHT + SPACE, 
+		buttons[0] = new RegularButton("Play", Color.red, BUTTON_X, BUTTON_Y, 
 				BUTTON_WIDTH, BUTTON_HEIGHT);
 		
-		buttons[1] = new RegularButton("Reset", Color.green, SPACE, 
-				LABEL_HEIGHT + BUTTON_HEIGHT + SPACE * 2, BUTTON_WIDTH, BUTTON_HEIGHT);
+		buttons[1] = new RegularButton("Reset", Color.green, BUTTON_X + BUTTON_WIDTH +
+				SPACE, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
 
-		buttons[2] = new RegularButton("Quit", Color.cyan, SPACE, 
-				LABEL_HEIGHT + BUTTON_HEIGHT * 2 + SPACE * 3, BUTTON_WIDTH, BUTTON_HEIGHT);
-		
-		bar = new BarGraph(500,400);
+		buttons[2] = new RegularButton("Quit", Color.cyan, BUTTON_X + (BUTTON_WIDTH +
+				SPACE)*2, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
 		
 		/*
-		 * Set up our two initial cards
+		 * sets up a Bargraph to display score
 		 */
+		bar = new BarGraph(BAR_X,BAR_Y);
 		
-		for(int i = 0; i < 4; i++){
-			cards[i] = new Card(cardX[i], cardY, 0 , new Spade());
+		/*
+		 * Sets up the decks of cards
+		 */
+		for(int i = 0; i < 2; i++){
+			cards[i] = new Card(cardX[i], cardY, 0 , new CardBack());
+			areCardsVisible[i] = true;
 		}
-		areCardsVisible[0] = true;
-		areCardsVisible[3] = true;
 
 		myWindow = new CloseWindow(); // allows for window closing
 		addWindowListener(myWindow);
-		addMouseListener(this);
-		addComponentListener(this);//to know when the window has been resized
+		
+		addMouseListener(this); //detects mouse events in the frame
 		
 		System.out.println("This means War!");
-		initializationComplete = true;
+		
+		initializationComplete = true; // the game setup is complete
 		
 		setVisible(true);
-		
-		
-		
-		//TODO: do I need this?
-		insets = getInsets();
-		
-		int dominoWidth = 200,
-			dominoHeight = 100,
-			dominoDepth = 10;
-		
-		// determines the max possible location that a user can select for a
-		// domino's position
-		MAX_VALUE_X = WIDTH - insets.left - insets.right - dominoWidth - dominoDepth;
-		MAX_VALUE_Y = HEIGHT - insets.top - insets.bottom - dominoHeight - dominoDepth;
-		
 	} // end default constructor
 
 	/**
 	 * The <code>paint</code> method will paint each <code>Card</code> on <code>Game</code>
 	 * after then have been initialized.
 	 */
+	@Override
 	public void paint(Graphics pane){
 		if(initializationComplete){
 			
-			/*
-			 *  Note: we can use the "for each" syntax because we know all four buttons
-			 *  have been instantiated.  We couldn't do that if any of the references
-			 *  in the array were null.  Let's say we had an int variable numButtons that
-			 *  held how many buttons had been instantiated.
-			 *  We would need to use the syntax:
-			 *  
-			 *  for(int i = 0; i < numButtons; i++){
-			 *  	buttons[i].paint(pane);
-			 *  }
-			 */
-			for(AButton button: buttons){//makes it easy to paint when they are in 
-				button.paint(pane);		//an array!
+			//paint our buttons
+			for(AButton button: buttons){
+				button.paint(pane);		
 			}
 			
+			// paint bar graph
 			bar.paint(pane);
 			
-			//TODO: show all cards
+			// paint cards that are played
 			for(int i = 0; i < 4; i++){
 				if (areCardsVisible[i]){
 					cards[i].paint(pane);
@@ -220,19 +177,23 @@ public class Game extends Frame implements MouseListener, ComponentListener {
 	}
 	
 	/**
-	 * The <code>computersTurn</code> method creates a new <code>Card</code>
-	 * with randomly generated value and location and places it on the
-	 * <code>Game</code> on the game board.
+	 * The <code>playTurn</code> method draws a <code>Card</code> from each
+	 * players deck and plays it. The player with a higher value card scores
+	 * a point.
 	 */
 	private void playTurn(){
 		
-		int[] cardValues = { (int)(Math.random()*14 +1),
-							 (int)(Math.random()*14 +1)};
+		// generates two card values between 2 and 14 (inclusive)
+		int[] cardValues = { (int)(Math.random()*13 + 2),
+							 (int)(Math.random()*13 + 2)};
+		
+		// generate two random numbers to determine the suit of each card
 		int[] suits = {(int)(Math.random()*4 +1),
 					   (int)(Math.random()*4 +1)};
 		
 		AShape suit;
-			
+		
+		// Assign a suit shape based on the suit value 
 		for(int i = 0; i < 2; i++){
 			switch(suits[i]){
 				case 1:
@@ -248,29 +209,50 @@ public class Game extends Frame implements MouseListener, ComponentListener {
 					suit = new Club();
 					break;
 				default:
-				 	suit = null;
+				 	suit = null; // should never happen
 			}
-			cards[i+1] = new Card(cardX[i+1], cardY, cardValues[i] , suit);
+			// creates new cards based on generated values and suit
+			cards[i+2] = new Card(cardX[i+2], cardY, cardValues[i] , suit);
+			areCardsVisible[i+2] = true; // allows them be displayed
 		}
 		
-		areCardsVisible[1] = true;
-		areCardsVisible[2] = true;
-			
-		// checks for war condition
-		if(cardValues[0] == cardValues[1]){
-			roundScore = roundScore*2;
-		}else{
-			gameScore += roundScore;
-			roundScore = 1;
-		}
+		compareCardValues();
 		repaint();
 	}
 	
 	/**
-	 * If the mouse click is within one of the shape buttons, it makes a new
-	 * instance of that shape, (replacing any previous instance).  If it's 
-	 * within the clear button it clears all the shapes.
+	 * The <code>compareCardValues</code> method compares the value of each
+	 * <code>Card</code> that is drawn and updates the game score based on the
+	 * winner
 	 */
+	private void compareCardValues(){
+	
+		int comparison = cards[2].compareTo(cards[3]),
+			newScore = 0;
+		
+		// checks which player drew a higher card.
+		// the gameScore is a net score of cards. If the drawn cards are equal a
+		// war occurs. The round score tracks the running of all cards drawn until
+		// a tie is broken.
+		if(comparison == 0){
+			 bar.setRoundScore((bar.getRoundScore())*2);
+		}else if(comparison == 1){
+			newScore = bar.getGameScore() - bar.getRoundScore();
+			bar.setGameScore(newScore);
+			bar.resetRoundScore();
+		}else if(comparison == -1){
+			newScore = bar.getGameScore() + bar.getRoundScore();
+			bar.setGameScore(newScore);
+			bar.resetRoundScore();
+		}
+	}
+	
+	/**
+	 * If the mouse click is in the Play Button, a turn will be played.  If it's 
+	 * within the reset button, the game resets to the beginning. If it's within
+	 * the quit button, the game window will close.
+	 */
+	@Override
 	public void mouseClicked(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
@@ -279,10 +261,10 @@ public class Game extends Frame implements MouseListener, ComponentListener {
 			playTurn();
 			repaint();
 		}else if(buttons[1].isInside(x, y)){	//Reset
-			for(int i = 1; i < 3; i++){
-				areCardsVisible[i] = false;
+			for(int i = 2; i < 4; i++){
+				areCardsVisible[i] = false; // makes played cards invisible
 			}
-			gameScore = 0;
+			bar.reset(); // reset game score display
 			repaint();
 		}else if(buttons[2].isInside(x, y)){	//Quit
 			System.exit(0);
@@ -292,6 +274,7 @@ public class Game extends Frame implements MouseListener, ComponentListener {
 	/**
 	 * Flips the button that has been pressed
 	 */
+	@Override
 	public void mousePressed(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
@@ -308,6 +291,7 @@ public class Game extends Frame implements MouseListener, ComponentListener {
 	/**
 	 * Flips the button that has been released
 	 */
+	@Override
 	public void mouseReleased(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
@@ -318,7 +302,6 @@ public class Game extends Frame implements MouseListener, ComponentListener {
 				repaint();
 			}
 		}
-
 	}
 
 	@Override
@@ -326,23 +309,4 @@ public class Game extends Frame implements MouseListener, ComponentListener {
 
 	@Override
 	public void mouseExited(MouseEvent e) {}
-	
-	public void componentHidden(ComponentEvent event){}
-
-
-	/**
-	 * Makes sure shapes drawn after window is resized fit inside window.
-	 */
-	public void componentResized(ComponentEvent e) {
-		windowWidth = getWidth();
-		windowHeight = getHeight();	
-	}
-
-
-	@Override
-	public void componentMoved(ComponentEvent e) {}
-
-
-	@Override
-	public void componentShown(ComponentEvent e) {}
 }

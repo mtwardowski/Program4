@@ -1,5 +1,9 @@
+/**
+ *  The <code>Diamond</code> class is used to draw the diamond suite on a card.
+ */
 package shapes;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
 
@@ -12,11 +16,11 @@ public class Diamond extends AShape{
 	private Polygon poly;
 	
 	/**
-	 * Assigns the label.
+	 * Default Constructor
 	 */
 	public Diamond(){
 		super();
-	}
+	}//end default constructor
 	
 	/**
 	 * Sets all of the properties
@@ -32,6 +36,8 @@ public class Diamond extends AShape{
 		poly.addPoint(x, y);//middle left
 		poly.addPoint(x + width/2, y + height);//bottom
 		poly.addPoint(x + width, y);//middle right
+		
+		this.color = Color.red;
 	}
 	
 	/**
@@ -49,6 +55,7 @@ public class Diamond extends AShape{
 		poly.addPoint(x, y);//middle left
 		poly.addPoint(x + width/2, y + height);//bottom
 		poly.addPoint(x + width, y);//middle right
+		color = Color.red;
 	}
 	
 	/**

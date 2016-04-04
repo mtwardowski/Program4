@@ -1,3 +1,6 @@
+/**
+ *  The <code>Spade</code> class is used to draw the Spade suite on a card.
+ */
 package shapes;
 
 import java.awt.Graphics;
@@ -6,7 +9,7 @@ import java.awt.Polygon;
 public class Spade extends AShape{
 	
 	/**
-	 * Assigns the label.
+	 * Default Constructor
 	 */
 	public Spade(){
 		super();
@@ -35,8 +38,7 @@ public class Spade extends AShape{
 		super.setup(x, y, width, height);
 	}
 	/**
-	 * draws spade, filled with the given color and its numeric label
-	 * @param pane
+	 * draws a spade
 	 */
 	@Override
 	public void paint(Graphics pane) {

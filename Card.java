@@ -5,22 +5,15 @@
 * <code>Game</game>
 * The upper left posterior corner of the <code>Card</code>  is drawn at point.
 * <p>
-* The <code>paint</code> method receives a <code>Graphics</code> object and 
-* draws a <code>Card</code>.
-* The <code>drawBlank</code> method receives a <code>Graphics</code> object 
-* and draws a blank <code>Card</code>.
-* The <code>drawDot</code> method receives a <code>Graphics</code> object, 
-* an <code>int</code> for the X coordinate,and an <code>int</code> for the Y 
-* coordinate.
-* The <code>drawOne, drawTwo, drawThree, drawFour, drawFive</code> methods 
-* receive a <code>Graphics</code> object, and a <code>boolean</code>
-* that determines the side of the face of the <code>Card</code> to be drawn on. 
-* The <code>doDominosOverlap</code> method returns true if coordinates passed
-* within the area of this <code>Card</code>.
-* The <code>compareFaceValues</code> method checks to see the input parameter
-* <code>Card</code> matches this <code>Card</code>. 
-* The <code>flipDominoHorizontal</code> method will rotate the
-<code>Card</code> 180 degrees.
+* The <code>paint</code> method receives a <code>Graphics</code> object
+* and draws a card <code>Card</code> with a suit and value displayed.
+* The <code>drawShape</code> method draws the suit shape on the card.
+* The <code>drawCardValue</code> method draws the value of the card in its
+* upper left hand corner.
+* The <code>compareTo/code> receives <code>Card</code> and compares it to
+* this <code>Card</code>.. Returns 0 if they are equal, 1 if this  
+* <code>Card</code>. is greater than the argument, or -1 if the argument is
+* greater than this <code>Card</code>. 
 * 
 * 
 * @Author Michael Twardowski
@@ -29,9 +22,7 @@
 import java.awt.Color;						
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
 import java.awt.geom.RoundRectangle2D;
-import java.util.Scanner;
 
 import shapes.AShape;
 
@@ -43,25 +34,25 @@ public class Card extends AShape
     private static final int HEIGHT = 200,
     				  		 WIDTH = 125,
     				  		 CORNER_ARCH = 10,
-    				  		 CARD_FACE_WIDTH = 25,
+    				  		 CARD_FACE_WIDTH = 25, // size of suit icon
     				  		 CARD_FACE_HEIGHT = 25;
 	
 	/**
-	 * Holds the cards suit
+	 * Holds the card's suit shape
 	 */
 	private AShape cardFace;
 	
 	 /**
      * Dimensions location and drawing of the card's face
      */
-	
 	private final int CARD_FACE_X,
 					  CARD_FACE_Y;
 	
 	/**
 	 *	The constructor for a <code>Card</code> receives a <code>int</code> 
-	 * for the X coordinate , Y coordinate, left face value, and right face value
-	 *  The upper left posterior corner of the <code>Card</code> 
+	 * for the X coordinate , Y coordinate, and a value of the card, and AShape
+	 * for the suit of card.
+	 * The upper left posterior corner of the <code>Card</code> 
 	 * is drawn at point (x,y).
 	 * 
 	 * @param someX is a <code>int</code> for the X coordinate of the Card
@@ -77,14 +68,14 @@ public class Card extends AShape
 		this.cardFace = cardFace;
 		CARD_FACE_X = x + WIDTH/2 - CARD_FACE_WIDTH/2;
 		CARD_FACE_Y = y + HEIGHT/2;
-		cardFace.setup(CARD_FACE_X, CARD_FACE_Y, CARD_FACE_WIDTH, CARD_FACE_HEIGHT);
 		
+		// setups the suit shape location
+		cardFace.setup(CARD_FACE_X, CARD_FACE_Y, CARD_FACE_WIDTH, CARD_FACE_HEIGHT);
 	} // end constructor
 	
-	
 	/**   
-	 * The <code>drawCard</code> method receives a <code>Graphics</code> object
-	 * and draws a blank <code>Card</code>.
+	 * The <code>paint</code> method receives a <code>Graphics</code> object
+	 * and draws a card <code>Card</code> with a suit and value displayed.
 	 *
 	 * @param pane is a <code>Graphics</code> object
 	 */
@@ -97,23 +88,18 @@ public class Card extends AShape
         RoundRectangle2D roundedRectangle = new RoundRectangle2D.Float(x, y, WIDTH, HEIGHT, CORNER_ARCH, CORNER_ARCH);
         pane2D.draw(roundedRectangle);
     	
+        // draws suit shape
         drawShape(pane);
-     // only draws the number if its value is valid
-     	if((number > 0)&&(number < 15)){
+        // only draws the number if its value is valid
+     	if((number > 1)&&(number < 15)){
      		drawCardValue(pane);
      	}
     }
     
 	/**   
-	 * The <code>drawDot</code> method receives a <code>Graphics</code> object, 
-	 * an <code>int</code> for the X coordinate, and an <code>int</code> for the
-	 * Y coordinate.
-	 * <p>
-	 * It draws a dot, centered at the X, Y coordinates.
+	 * The <code>drawShape</code> method draws the suit shape on the card.
 	 * <p>
 	 * @param pane is a <code>Graphics</code> object
-	 * @param centerX is an <code>int</code> corresponding to X coordinate of the dot.
-	 * @param centerY is an <code>int</code> corresponding to Y coordinate of the dot.
      */ 
     private void drawShape(Graphics pane)
 	{
@@ -121,21 +107,17 @@ public class Card extends AShape
 	}
     
     /**   
-	 * The <code>drawDot</code> method receives a <code>Graphics</code> object, 
-	 * an <code>int</code> for the X coordinate, and an <code>int</code> for the
-	 * Y coordinate.
-	 * <p>
-	 * It draws a dot, centered at the X, Y coordinates.
+	 * The <code>drawCardValue</code> method draws the value of the card in its
+	 * upper left hand corner.
 	 * <p>
 	 * @param pane is a <code>Graphics</code> object
-	 * @param centerX is an <code>int</code> corresponding to X coordinate of the dot.
-	 * @param centerY is an <code>int</code> corresponding to Y coordinate of the dot.
      */ 
     private void drawCardValue(Graphics pane)
 	{
     	String cardValue = "";
-    	int labelWidth = pane.getFontMetrics().stringWidth("" + number);//width of number
-		int labelHeight = pane.getFontMetrics().getAscent();
+    	int leftMargin = 15;
+		int topMargin = 25;
+		// if the value of the card is > 10 then it assigned a letter as its string
 		if (number > 10){
 			switch(number){
 				case 11:
@@ -156,43 +138,31 @@ public class Card extends AShape
 		}else{
 			cardValue = "" + number;
 		}
-		pane.drawString(cardValue,			//draws number the number in the
-					x + labelWidth*2,  // top left corner
-					y + labelHeight*2);
+		//draws number the number in the top left corner
+		pane.drawString(cardValue,			
+					x + leftMargin,
+					y + topMargin);
 	}
     
     /**
-     * The <code>compareFaceValues</code> method checks to see the input parameter
-     * <code>Card</code> matches this <code>Card</code>. 
+     * The <code>compareTo/code> receives <code>Card</code> and compares it to
+     * this <code>Card</code>.. Returns 0 if they are equal, 1 if this  
+     * <code>Card</code>. is greater than the argument, or -1 if the argument is
+     * greater than this <code>Card</code>. 
      * <p>
      * @param card to be compared to
+     * @return value
      */
-    public void compareFaceValues(Card card){
-    	String prompt = "There's no match!";
+    public int compareTo(Card card){
     	
-    	if(leftFaceValue == card.leftFaceValue){
-			card.flipDominoHorizontal();
-			card.x = x - WIDTH - DEPTH - SPACING;
-			card.y = y;
-			prompt = "It's a Match!";
-    	}
-    	else if(rightFaceValue == card.leftFaceValue){
-    		card.x = x + WIDTH + DEPTH + SPACING;
-			card.y = y;
-			prompt = "It's a Match!";
-    	}
-    	else if(leftFaceValue == card.rightFaceValue){
-    		card.x = x - WIDTH - DEPTH - SPACING;
-			card.y = y;
-			prompt = "It's a Match!";
-    	}
-    	else if(rightFaceValue == card.rightFaceValue){
-			card.flipDominoHorizontal();
-			card.x = x + WIDTH + DEPTH + SPACING;
-			card.y = y;
-			prompt = "It's a Match!";
-    	}
+    	int value = 0;
     	
-    	System.out.println(prompt);
+    	if (this.number > card.number){
+    		value = 1;
+    	}else if(this.number < card.number){
+    		value = -1;
+    	}
+    		
+    	return value;
     }
 }

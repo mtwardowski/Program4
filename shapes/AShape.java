@@ -1,3 +1,6 @@
+/**
+ *  The <code>AShape</code> abstract class can be used to create shapes
+ */
 package shapes;
 
 import java.awt.Color;
@@ -6,12 +9,12 @@ import java.awt.Graphics;
 public abstract class AShape {
 	
 		/**
-		 * The location, dimensions and label
+		 * The location, dimensions, label, and number of shape
 		 */
 		protected int x, y, width, height, number;
 		
 		/**
-		 * Its fill color
+		 * Its the fill color of the shape
 		 */
 		protected Color color;
 		
@@ -60,8 +63,8 @@ public abstract class AShape {
 		 * Sets the fill color
 		 * @param someColor
 		 */
-		public void setColor(Color someColor){
-			color = someColor;
+		public void setColor(Color color){
+			this.color = color;
 		}
 		
 		/**

@@ -1,3 +1,8 @@
+/**
+ *  The <code>AButton</code> abstract class can be used to create interactive buttons
+ *  of any shape.
+ */
+
 package button;
 import java.awt.*;
 

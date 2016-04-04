@@ -1,3 +1,8 @@
+/**
+ *  The <code>RegularButton</code> class can be used to create interactive buttons
+ *  of rectangular shape.
+ */
+
 package button;
 
 import java.awt.*;
@@ -37,5 +42,4 @@ public class RegularButton extends AButton {
 	public void setShape(){
 		shape = new Rectangle(x, y, width, height);
 	}
-
 }

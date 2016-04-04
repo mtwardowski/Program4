@@ -1,3 +1,6 @@
+/**
+ *  The <code>Club</code> class is used to draw the club suite on a card.
+ */
 package shapes;
 
 import java.awt.Graphics;
@@ -6,11 +9,11 @@ import java.awt.Polygon;
 public class Club extends AShape{
 	
 	/**
-	 * Assigns the label.
+	 * Default Constructor
 	 */
 	public Club(){
 		super();
-	}
+	}//end default constructor
 	
 	/**
 	 * Sets all of the properties
@@ -35,8 +38,7 @@ public class Club extends AShape{
 		super.setup(x, y, width, height);
 	}
 	/**
-	 * draws spade, filled with the given color and its numeric label
-	 * @param pane
+	 * paints a spade
 	 */
 	@Override
 	public void paint(Graphics pane) {

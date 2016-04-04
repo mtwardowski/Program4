@@ -1,31 +1,52 @@
+/**	
+*					         BarGraph Class
+*					=============================
+* The <code>BarGraph</code> class creates a graphical object to be used to
+* visualize a value.
+* <p>
+* The <code>setGameScore</code> method sets the value of the Graph
+* The <code>setRoundScore</code> method sets value of the tied round score
+* The <code>getGameScore</code> returns the value of the Graph
+* The <code>setRoundScore</code> returns the value of the tied round score
+* The <code>reset</code> method resets the value of the barGraph to zero
+* The <code>resetRoundScore </code> method resets the roundScore
+* The <code>paint</code> method paints the barGraph
+* 
+* @Author Michael Twardowski
+*/
+
 import java.awt.Color;						
 import java.awt.Graphics;
 
 import shapes.AShape;
+import shapes.Rectangle;
 
 public class BarGraph {
 
 	/**
-	 * The location, dimensions and label
+	 * The location, value of the barGraph and the dimensions of the bars
 	 */
-	private int x, y, number,
+	private int x, y,
+			gameScore = 0,
+			roundScore = 1,
 			dividerHeight = 75,
 			barHeight = 50,
-			barWidht = 2;
+			barWidth = 5;
 	
 	/**
-	 * Its fill color
+	 * Fill color for each side of the bar graph
 	 */
-	private Color color;
+	private Color colorLeft,
+				  colorRight;
 	
 	/**
-	 * bar graph shapes
+	 * Shapes of the bar graph.
 	 */
-	private AShape[] barGraph;		
+	private AShape[] barsRight = new AShape[52],
+					 barsLeft = new AShape[52];		
 			
 	public BarGraph(){
-		number = 0;
-	}
+	} //end default constructor
 	
 	/**
 	 * Sets all of the properties
@@ -37,44 +58,83 @@ public class BarGraph {
 	public BarGraph(int x, int y){
 		this.x = x;
 		this.y = y;
-		number = 0;
-		color = Color.blue;
+		colorLeft = Color.blue;
+		colorRight = Color.cyan;
+		
+		// creates rectangles for bar graphs on each side of the center point
+		for(int i = 0; i < 52; i++){
+			barsRight[i] = new Rectangle(x + barWidth*i, y + barHeight/4 , barWidth, barHeight);
+			barsRight[i].setColor(colorRight);
+			barsLeft[i] = new Rectangle(x - barWidth*(1+ i), y + barHeight/4 , barWidth, barHeight);
+			barsLeft[i].setColor(colorLeft);
+		}
 	}
 	
 	/**
-	 * Sets the fill color
-	 * @param someColor
+	 * The <code>setGameScore</code> method sets the value of the Graph
+	 * @param value
 	 */
-	public void setColor(Color color){
-		this.color = color;
+	public void setGameScore(int value){
+		gameScore = value;
 	}
-	
 	/**
-	 * Sets the fill color
-	 * @param someColor
+	 * The <code>setRoundScore</code> method sets value of the tied round score
+	 * @param value
 	 */
-	public void setNumber(int number){
-		this.number = number;
+	public void setRoundScore(int value){
+		roundScore = value;
 	}
 	
 	/**
-	 * restarts the value of the barGraph to zero
+	 * The <code>getGameScore</code> returns the value of the Graph
+	 * @param value
+	 */
+	public int getGameScore(){
+		return gameScore;
+	}
+	/**
+	 * The <code>setRoundScore</code> returns the value of the tied round score
+	 * @param value
+	 */
+	public int getRoundScore(){
+		return roundScore;
+	}
+	
+	/**
+	 * The <code>reset</code> method resets the value of the barGraph to zero
 	 */
 	public void reset(){
-		number = 0;
+		gameScore = 0;
+		resetRoundScore();
+	}
+	/**
+	 * The <code>resetRoundScore </code> method resets the roundScore
+	 */
+	public void resetRoundScore(){
+		roundScore = 1;
 	}
 	
+	/**
+	 * The <code>paint</code> method paints the barGraph
+	 * @param pane
+	 */
 	public void paint(Graphics pane){
+		
+		// draw line at center point of barGraph
 		pane.setColor(Color.black);
 		pane.drawLine(x, y, x, y + dividerHeight);
-		pane.setColor(color);
 		
 		int j = 0;
 		// repaints any shapes that have not been cleared
-		while(j < Math.abs(number)){
-			barGraph[j].paint(pane);
+		while(j < Math.abs(gameScore)){
+			// if value is negative this will only draw the left barGraph
+			// if the value is positive this will only draw the right barGraph
+			if(gameScore > 0){
+				barsRight[j].paint(pane);
+			}else{
+				barsLeft[j].paint(pane);
+			}
 			j++;
 		}
-	};
-	
+	}
 }

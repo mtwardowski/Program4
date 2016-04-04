@@ -1,11 +1,13 @@
-/**
- *  The <code>Club</code> class is used to draw the club suite on a card.
- */
 package shapes;
 
 import java.awt.Graphics;
 import java.awt.Polygon;
 
+/**
+ *  The <code>Club</code> class is used to draw the club suite on a card.
+ *  
+ *  @Author Michael Twardowski
+ */
 public class Club extends AShape{
 	
 	/**

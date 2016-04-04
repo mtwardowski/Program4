@@ -1,3 +1,17 @@
+import button.AButton;
+import button.RegularButton;
+import shapes.AShape;
+import shapes.CardBack;
+import shapes.Diamond;
+import shapes.Heart;
+import shapes.Spade;
+import shapes.Club;
+
+import java.awt.Frame;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.Color;
+import java.awt.Graphics;
 
 /**
 *							  	Game Class
@@ -18,21 +32,6 @@
 *
 *	@Author Michael Twardowski
 */
-
-import button.AButton;
-import button.RegularButton;
-import shapes.AShape;
-import shapes.CardBack;
-import shapes.Diamond;
-import shapes.Heart;
-import shapes.Spade;
-import shapes.Club;
-
-import java.awt.Frame;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.Color;
-import java.awt.Graphics;
 
 public class Game extends Frame implements MouseListener {
 	/**

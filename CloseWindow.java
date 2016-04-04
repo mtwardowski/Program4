@@ -1,3 +1,6 @@
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 /**
 *	The <code>CloseWindow</code> Class extends the <code>WindowAdapter</code> Class to be 
 *	able to close a window when its exit button is pressed.
@@ -6,9 +9,6 @@
 *	
 *	@Author Michael Twardowski
 */
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 public class CloseWindow extends WindowAdapter {
 	
 	/**

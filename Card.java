@@ -1,3 +1,9 @@
+import java.awt.Color;						
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.RoundRectangle2D;
+import shapes.AShape;
+
 /**	
 *					         Card Class
 *					=============================
@@ -18,14 +24,6 @@
 * 
 * @Author Michael Twardowski
 */
-
-import java.awt.Color;						
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.RoundRectangle2D;
-
-import shapes.AShape;
-
 public class Card extends AShape
 {
 	/**

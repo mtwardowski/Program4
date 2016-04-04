@@ -1,11 +1,13 @@
-/**
- *  The <code>AShape</code> abstract class can be used to create shapes
- */
 package shapes;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
+/**
+ *  The <code>AShape</code> abstract class can be used to create shapes
+ *  
+ *  @Author Michael Twardowski
+ */
 public abstract class AShape {
 	
 		/**

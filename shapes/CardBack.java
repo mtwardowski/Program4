@@ -1,11 +1,13 @@
-/**
- *  The <code>CardBack</code> class is used to draw back of card
- */
 package shapes;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
+/**
+ *  The <code>CardBack</code> class is used to draw back of card
+ *  
+ *  @Author Michael Twardowski
+ */
 public class CardBack extends AShape{
 	
 	private String cardLabel = "WAR!";

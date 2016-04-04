@@ -1,11 +1,13 @@
-/**
- *  The <code>Spade</code> class is used to draw the Spade suite on a card.
- */
 package shapes;
 
 import java.awt.Graphics;
 import java.awt.Polygon;
 
+/**
+ *  The <code>Spade</code> class is used to draw the Spade suite on a card.
+ *  
+ *  @Author Michael Twardowski
+ */
 public class Spade extends AShape{
 	
 	/**

@@ -1,12 +1,14 @@
-/**
- *  The <code>Diamond</code> class is used to draw the diamond suite on a card.
- */
 package shapes;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
 
+/**
+ *  The <code>Diamond</code> class is used to draw the diamond suite on a card.
+ *  
+ *  @Author Michael Twardowski
+ */
 public class Diamond extends AShape{
 	
 	/**

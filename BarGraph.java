@@ -1,3 +1,9 @@
+import java.awt.Color;						
+import java.awt.Graphics;
+
+import shapes.AShape;
+import shapes.Rectangle;
+
 /**	
 *					         BarGraph Class
 *					=============================
@@ -14,13 +20,6 @@
 * 
 * @Author Michael Twardowski
 */
-
-import java.awt.Color;						
-import java.awt.Graphics;
-
-import shapes.AShape;
-import shapes.Rectangle;
-
 public class BarGraph {
 
 	/**

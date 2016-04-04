@@ -1,11 +1,13 @@
-/**
- *  The <code>Rectangle</code> class is used to draw rectangles
- */
 package shapes;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
+/**
+ *  The <code>Rectangle</code> class is used to draw rectangles
+ *  
+ *  @Author Michael Twardowski
+ */
 public class Rectangle extends AShape{
 	
 	/**
